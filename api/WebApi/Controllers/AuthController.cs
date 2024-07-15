@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using WebApi.DTOs;
-using WebApi.Models;
+using WebApi.ResponseModels;
 using WebApi.Services;
 
 namespace WebApi.Controllers

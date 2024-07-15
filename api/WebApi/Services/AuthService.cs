@@ -6,7 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using WebApi.DTOs;
-using WebApi.Models;
+using WebApi.ResponseModels;
 using WebApi.Utils;
 
 namespace WebApi.Services
