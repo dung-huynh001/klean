@@ -1,4 +1,3 @@
-import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { LOGIN_SUCCESS, LOGOUT } from "../types/authTypes";
 import axiosInstance from "~/utils/request";
@@ -10,7 +9,7 @@ export const login = (credentials) => async (dispatch) => {
 
     localStorage.setItem("token", token);
     const decoded = jwtDecode(token);
-    dispatch({
+    return dispatch({
       type: LOGIN_SUCCESS,
       payload: decoded,
     });

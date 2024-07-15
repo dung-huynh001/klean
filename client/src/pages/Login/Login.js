@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import classNames from "classnames/bind";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,6 +10,8 @@ import { faSync } from "@fortawesome/free-solid-svg-icons";
 const cx = classNames.bind(styles);
 
 function Login() {
+  const navigate = useNavigate();
+
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
@@ -31,6 +34,9 @@ function Login() {
     }
     setLoading(true);
     const res = await dispatch(login(credentials));
+    if (res && res.payload) {
+      navigate("/");
+    }
     console.log(res);
     setLoading(false);
   };

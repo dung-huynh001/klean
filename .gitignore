@@ -105,7 +105,7 @@ yarn-error.log*
 yarn-debug.log
 yarn-error.log
 node_modules/
-package_lock
+package_lock.json
 
 # Dependency directories
 jspm_packages/
