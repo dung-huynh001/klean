@@ -1,10 +1,19 @@
 import { Fragment } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useSelector } from "react-redux";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+
 import { publicRoutes, privateRoutes } from "./routes";
 import MainLayout from "./layouts/MainLayout";
-import { PrivateRoute } from "./layouts/components/PrivateRoute";
+import PageNotFound from "./pages/PageNotFound";
 
 function App() {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
   return (
     <Router>
       <div className="App">
@@ -14,7 +23,7 @@ function App() {
             let Layout = MainLayout;
 
             if (route.layout) {
-              Layout = route.layout
+              Layout = route.layout;
             } else if (route.layout === null) {
               Layout = Fragment;
             }
@@ -24,27 +33,42 @@ function App() {
                 key={index}
                 path={route.path}
                 element={
-                  <Layout><Page /></Layout>
-                }>
-              </Route>)
+                  <Layout>
+                    <Page />
+                  </Layout>
+                }
+              />
+            );
           })}
 
           {privateRoutes.map((route, index) => {
-            const Page = route.component;
+            const PrivatePage = route.component;
             let Layout = MainLayout;
 
             if (route.layout) {
-              Layout = route.layout
+              Layout = route.layout;
             } else if (route.layout === null) {
               Layout = Fragment;
             }
+
             return (
-              <PrivateRoute
+              <Route
                 key={index}
-                path="/dashboard"
-                component={Page} layout={Layout}
-              />)
+                path={route.path}
+                element={
+                  isAuthenticated ? (
+                    <Layout>
+                      <PrivatePage />
+                    </Layout>
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+            );
           })}
+
+          <Route path="/*" element={<PageNotFound />} />
         </Routes>
       </div>
     </Router>
