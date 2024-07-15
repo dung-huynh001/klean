@@ -42,7 +42,7 @@ namespace WebApi.Middlewares
             var errorDetail = new ErrorDetails()
             {
                 Message = ex.Message + " " + ex.InnerException?.Message,
-                StatusCode = context.Response.StatusCode
+                StatusCode = StatusCodes.Status400BadRequest
             };
 
             await context.Response.WriteAsync(errorDetail.ToString());

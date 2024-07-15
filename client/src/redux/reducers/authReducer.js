@@ -1,4 +1,4 @@
-import { LOGIN_SUCCESS, LOGOUT } from "../types/authTypes";
+import { LOGIN_SUCCESS, LOGIN_ERROR, LOGOUT } from "../types/authTypes";
 import { jwtDecode } from "jwt-decode";
 
 const initialState = {
@@ -6,11 +6,12 @@ const initialState = {
   user: {},
 };
 
-const token = localStorage.token ? jwtDecode(localStorage.token) : "";
+const token = localStorage.getItem("token");
+const deToken = (token === null || token === undefined) ? jwtDecode(token) : null;
 
-if (token && token.exp < Date.now()) {
+if (deToken && deToken.exp < Date.now()) {
   initialState.isAuthenticated = true;
-  initialState.user = token;
+  initialState.user = deToken;
 }
 
 const authReducer = (state = initialState, action) => {

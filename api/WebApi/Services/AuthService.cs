@@ -23,8 +23,8 @@ namespace WebApi.Services
         }
         public async Task<AuthResponse> LoginAsync(LoginDto dto)
         {
-            AppUser user = await _context.Set<AppUser>()
-                .FirstAsync(usr => usr.Username.Trim().ToLower() == dto.Username.Trim().ToLower());
+            AppUser? user = await _context.Set<AppUser>()
+                .FirstOrDefaultAsync(usr => usr.Username.Trim().ToLower() == dto.Username.Trim().ToLower());
 
             if(user != null)
             {
