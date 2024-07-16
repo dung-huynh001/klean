@@ -3,10 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import classNames from "classnames/bind";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
+import { faSync } from "@fortawesome/free-solid-svg-icons";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import styles from "./Login.module.scss";
 import { login } from "~/redux/actions/authActions";
-import { faSync } from "@fortawesome/free-solid-svg-icons";
-import { toast } from "react-toastify";
 
 const cx = classNames.bind(styles);
 
@@ -36,19 +39,24 @@ function Login() {
     }
     setLoading(true);
     const res = await dispatch(login(credentials));
+    if (res.data && res.data.StatusCode === 400) {
+      notify(res.data.Message);
+    }
     if (res && res.payload) {
       navigate("/");
-    } 
-    console.log(res);
+    }
     setLoading(false);
   };
 
   return (
-    <div className={cx('wrapper')}>
-      <div className={cx('auth-bg', 'auth-bg-position')}>
+    <div className={cx("wrapper")}>
+      <div className={cx("auth-bg", "auth-bg-position")}>
         <div className={cx("auth-bg-overlay")}></div>
         <div className={cx("shape")}>
-          <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1440 120">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            version="1.1"
+            viewBox="0 0 1440 120">
             <path d="M 0,36 C 144,53.6 432,123.2 720,124 C 1008,124.8 1296,56.8 1440,40L1440 140L0 140z"></path>
           </svg>
         </div>
@@ -67,12 +75,14 @@ function Login() {
               <div className="card mt-4">
                 <div className="card-body p-4">
                   <div className="text-center">
-                    <h5 className="text-primary">Welcome to KLEAN</h5>
+                    <h5 className="text-primary fw-bold">Welcome Back</h5>
                   </div>
                   <div className="p-2 mt-3">
                     <form className="form-group">
                       <div className="mb-3">
-                        <label htmlFor="username" className="form-label">
+                        <label
+                          htmlFor="username"
+                          className={cx("form-label", "label")}>
                           Username
                         </label>
                         <input
@@ -91,7 +101,9 @@ function Login() {
                         )}
                       </div>
                       <div className="mb-3">
-                        <label htmlFor="password" className="form-label">
+                        <label
+                          htmlFor="password"
+                          className={cx("form-label", "label")}>
                           Password
                         </label>
                         <input
@@ -111,11 +123,23 @@ function Login() {
                       </div>
                       <button
                         type="submit"
-                        className="btn btn-success w-100 mt-3"
+                        className={cx(
+                          "btn btn-success w-100 mt-3",
+                          "btn-submit"
+                        )}
                         disabled={loading}
                         onClick={(e) => handleSubmit(e)}>
-                        {loading && <FontAwesomeIcon icon={faSync} spin />} Sign In
+                        {loading && <FontAwesomeIcon icon={faSync} spin />} Sign
+                        In
                       </button>
+                      <div className="d-flex justify-content-center">
+                        <p className="mt-4">
+                          Don't have an account ?{" "}
+                          <Link to="/register" className="fw-bold">
+                            Sign Up
+                          </Link>
+                        </p>
+                      </div>
                     </form>
                   </div>
                 </div>
@@ -123,8 +147,9 @@ function Login() {
             </div>
           </div>
         </div>
-      </div >
-    </div >
+      </div>
+      <ToastContainer theme="colored"/>
+    </div>
   );
 }
 

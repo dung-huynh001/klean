@@ -14,7 +14,8 @@ export const login = (credentials) => async (dispatch) => {
       payload: decoded,
     });
   } catch (err) {
-    console.log("Login error: ", err);
+    console.log(">>> Check error: ", err);
+    return err
   }
 };
 

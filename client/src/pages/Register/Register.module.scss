@@ -1,0 +1,76 @@
+.wrapper {
+  background-color: #f1f1f1;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.auth-bg {
+  background-image: url("../../assets/images/auth-bg.jpg");
+  background-position: center;
+  background-size: cover;
+}
+
+.auth-bg-position {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 350px;
+}
+
+.auth-bg-overlay {
+  background: linear-gradient(to right, #4796c4, #5ea3cb);
+  opacity: 0.9;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  inset: 0;
+  background-color: #000;
+}
+
+.shape {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  pointer-events: none;
+
+  & > svg {
+    width: 100%;
+    height: auto;
+    fill: #f1f1f1;
+  }
+}
+
+.content {
+  padding-bottom: 60px;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.auth-logo {
+  color: #fff;
+  font-weight: 700;
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.btn-submit {
+  font-weight: 500;
+}
+
+.group-label {
+  padding-left: 10px;
+  padding-right: 10px;
+  text-transform: uppercase;
+  position: absolute;
+  top: -15px;
+  left: -10px;
+  background: #fff;
+}

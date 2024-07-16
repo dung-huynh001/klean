@@ -6,6 +6,9 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.response.use(
   (res) => {
+    if(res.data && res.data.StatusCode === 400) {
+      return Promise.reject(res)
+    } 
     return res;
   },
   (err) => {
@@ -19,9 +22,9 @@ axiosInstance.interceptors.response.use(
 export const handleRequest = async (axiosPromise) => {
   try {
     const res = await axiosPromise;
+    console.log(res)
     return res.data;
   } catch (err) {
-    console.log(err);
     throw err;
   }
 };
