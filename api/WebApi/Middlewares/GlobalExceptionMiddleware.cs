@@ -45,6 +45,10 @@ namespace WebApi.Middlewares
                 StatusCode = StatusCodes.Status400BadRequest
             };
 
+            // Set the status code of response
+            context.Response.StatusCode = StatusCodes.Status400BadRequest; 
+            context.Response.ContentType = "application/json";
+
             await context.Response.WriteAsync(errorDetail.ToString());
         }
 
