@@ -1,4 +1,5 @@
-import { LOGIN_SUCCESS, LOGIN_ERROR, LOGOUT } from "../types/authTypes";
+import { Navigate } from "react-router-dom";
+import { LOGIN_SUCCESS, LOGOUT } from "../types/authTypes";
 import { jwtDecode } from "jwt-decode";
 
 const initialState = {
@@ -7,11 +8,15 @@ const initialState = {
 };
 
 const token = localStorage.getItem("token");
-const deToken = (token === null || token === undefined) ? jwtDecode(token) : null;
+try {
+  const deToken = (token === null || token === undefined) ? null : jwtDecode(token);
+  if (deToken && deToken.exp && deToken.exp < Date.now()) {
 
-if (deToken && deToken.exp < Date.now()) {
-  initialState.isAuthenticated = true;
-  initialState.user = deToken;
+    initialState.isAuthenticated = true;
+    initialState.user = deToken;
+  }
+} catch {
+  console.log(">>> Token is invalid");
 }
 
 const authReducer = (state = initialState, action) => {
@@ -32,5 +37,4 @@ const authReducer = (state = initialState, action) => {
       return state;
   }
 };
-
 export default authReducer;

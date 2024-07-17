@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import classNames from "classnames/bind";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
@@ -10,12 +9,17 @@ import "react-toastify/dist/ReactToastify.css";
 
 import styles from "./Register.module.scss";
 import { address as data } from "./data";
+import axiosInstance from "~/utils/request";
 
 const cx = classNames.bind(styles);
 
+const defaultRegisterDate = (new Date()).toLocaleDateString("fr-CA");
+
+const requiredFields = ["username", "password", "userId", "userLv", "loginPermit", "registerDate"]
+
 function Register() {
   const navigate = useNavigate();
-  const notify = (msg) => toast.warning(msg);
+  const notify = (type, msg) => toast[type](msg);
 
   const addressData = data;
 
@@ -24,16 +28,12 @@ function Register() {
   const [accountInformation, setAccountInformation] = useState({
     userId: "",
     password: "",
-    registerDate: () => {
-      const tDate = new Date();
-      const today = tDate.toLocaleDateString("fr-CA");
-      return today;
-    },
+    registerDate: defaultRegisterDate
   });
 
   const [userDetail, setUserDetail] = useState({
     username: "",
-    dateOfBirth: "",
+    dateOfBirth: "1990-01-01",
   });
 
   const [contact, setContact] = useState({
@@ -46,17 +46,16 @@ function Register() {
     state: "",
     suburb: "",
     postCode: "",
+    addressDetail: "",
   });
 
   const [permits, setPermits] = useState({
-    userLv: "",
-    loginPermit: "",
+    userLv: 2,
+    loginPermit: 2,
   });
 
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const dispatch = useDispatch();
 
   const handleAccountInformationChange = (e) => {
     setAccountInformation({
@@ -65,8 +64,22 @@ function Register() {
     });
   };
 
+  const handleUserDetailChange = (e) => {
+    setUserDetail({
+      ...userDetail,
+      [e.target.name]: e.target.value,
+    });
+  }
+
+  const handleContactChange = (e) => {
+    setContact({
+      ...contact,
+      [e.target.name]: e.target.value,
+    });
+  }
+
   const handleStateChange = (value) => {
-    const filterStates = addressData.filter((item) => item.id == value);
+    const filterStates = addressData.filter((item) => item.id === parseInt(value));
     setSuburbs(filterStates.at(0).suburb);
     setAddress({
       ...address,
@@ -77,7 +90,7 @@ function Register() {
   };
 
   const handleSuburbChange = (value) => {
-    const filterSuburbs = suburbs.filter((item) => item.id == value);
+    const filterSuburbs = suburbs.filter((item) => item.id === parseInt(value));
     console.log(filterSuburbs);
     setAddress({
       ...address,
@@ -86,6 +99,13 @@ function Register() {
     });
   };
 
+  const handleAddressDetailChange = (e) => {
+    setAddress({
+      ...address,
+      addressDetail: e.target.value
+    })
+  }
+
   const handlePermitsChange = (e) => {
     setPermits({
       ...permits,
@@ -93,12 +113,43 @@ function Register() {
     });
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(address);
-    console.log(permits);
+    const registerData = {
+      ...accountInformation,
+      ...userDetail,
+      ...contact,
+      ...address,
+      ...permits,
+      userId: parseInt(accountInformation.userId),
+      postCode: address.postCode === "" ? 0 : parseInt(address.postCode),
+      loginPermit: Boolean(permits.loginPermit)
+    }
     setSubmitted(true);
+    const hasEmptyRequiredField = requiredFields.some(field => !registerData[field]);
+    if (hasEmptyRequiredField) {
+      notify("warning", "Please fill in all required fields");
+      return;
+    }
+
     setLoading(true);
+    try {
+      const res = await axiosInstance.post("Auth/Register", registerData, {});
+      if (res) {
+        notify("success", "User account registration successful");
+        navigate('/login', { state: { registerSuccess: true } });
+      } else {
+        notify("warning", "Something went wrong");
+      }
+    } catch (err) {
+      console.log(">>> Register check:", err)
+      if (err.data && err.data.Message) {
+        notify("warning", err.data.Message);
+      } else {
+        notify("error", "Unable to connect to server");
+      }
+    }
     setLoading(false);
   };
 
@@ -125,7 +176,7 @@ function Register() {
             </div>
           </div>
           <div className="row justify-content-center">
-            <div className="col-10">
+            <div className="col-12 col-lg-10">
               <div className="card mt-4">
                 <div className="card-body p-4">
                   <div className="text-center">
@@ -141,11 +192,11 @@ function Register() {
                             Account Information
                           </label>
                         </div>
-                        <div className="col-3">
+                        <div className="col-12 col-md-4">
                           <label
                             htmlFor="userId"
                             className={cx("form-label", "label")}>
-                            User Id
+                            User Id <span className="text-danger">*</span>
                           </label>
                           <input
                             id="userId"
@@ -153,6 +204,8 @@ function Register() {
                             name="userId"
                             className="form-control"
                             autoComplete="off"
+                            maxLength={8}
+                            placeholder="Enter an 8-digit number"
                             value={accountInformation.userId}
                             onChange={(e) => handleAccountInformationChange(e)}
                           />
@@ -162,18 +215,20 @@ function Register() {
                             </span>
                           )}
                         </div>
-                        <div className="col-3">
+                        <div className="col-12 col-md-4">
                           <label
                             htmlFor="password"
                             className={cx("form-label", "label")}>
-                            Password
+                            Password <span className="text-danger">*</span>
                           </label>
                           <input
                             id="password"
-                            type="text"
+                            type="password"
                             name="password"
                             className="form-control"
                             autoComplete="off"
+                            maxLength={100}
+                            placeholder="Enter 8 - 100 characters"
                             value={accountInformation.password}
                             onChange={(e) => handleAccountInformationChange(e)}
                           />
@@ -183,11 +238,11 @@ function Register() {
                             </span>
                           )}
                         </div>
-                        <div className="col-3 ms-auto">
+                        <div className="col-12 col-md-4 ms-auto">
                           <label
                             htmlFor="registerDate"
                             className={cx("form-label", "label")}>
-                            Register Date
+                            Register Date <span className="text-danger">*</span>
                           </label>
                           <input
                             id="registerDate"
@@ -211,11 +266,11 @@ function Register() {
                             User Detail
                           </label>
                         </div>
-                        <div className="col-9">
+                        <div className="col-12 col-md-8">
                           <label
                             htmlFor="username"
                             className={cx("form-label", "label")}>
-                            Username
+                            Username <span className="text-danger">*</span>
                           </label>
                           <input
                             id="username"
@@ -223,27 +278,33 @@ function Register() {
                             name="username"
                             className="form-control"
                             autoComplete="off"
+                            maxLength={20}
+                            placeholder="Enter 8 - 20 characters"
+                            value={userDetail.username}
+                            onChange={(e) => handleUserDetailChange(e)}
                           />
-                          {submitted && (
+                          {submitted && !userDetail.username && (
                             <span className="text-danger form-text">
                               Username is required
                             </span>
                           )}
                         </div>
-                        <div className="col-3 ms-auto">
+                        <div className="col-12 col-md-4 ms-auto">
                           <label
                             htmlFor="dateOfBirth"
                             className={cx("form-label", "label")}>
-                            Date Of Birth
+                            Date Of Birth <span className="text-danger">*</span>
                           </label>
                           <input
-                            id="registerDate"
+                            id="dateOfBirth"
                             type="date"
-                            name="registerDate"
+                            name="dateOfBirth"
                             className="form-control"
                             autoComplete="off"
+                            value={userDetail.dateOfBirth}
+                            onChange={(e) => handleUserDetailChange(e)}
                           />
-                          {submitted && (
+                          {submitted && !userDetail.dateOfBirth && (
                             <span className="text-danger form-text">
                               Date Of Birth is required
                             </span>
@@ -254,7 +315,7 @@ function Register() {
                         <div>
                           <label className={cx("group-label")}>Contacts</label>
                         </div>
-                        <div className="col-3">
+                        <div className="col-12 col-md-4">
                           <label
                             htmlFor="mobile"
                             className={cx("form-label", "label")}>
@@ -266,14 +327,17 @@ function Register() {
                             name="mobile"
                             className="form-control"
                             autoComplete="off"
+                            placeholder="Enter mobile"
+                            value={contact.mobile}
+                            onChange={(e) => handleContactChange(e)}
                           />
-                          {submitted && !contact.mobile && (
+                          {/*submitted && !contact.mobile && (
                             <span className="text-danger form-text">
                               Mobile is required
                             </span>
-                          )}
+                          )*/}
                         </div>
-                        <div className="col-3">
+                        <div className="col-12 col-md-4">
                           <label
                             htmlFor="tel"
                             className={cx("form-label", "label")}>
@@ -285,14 +349,17 @@ function Register() {
                             name="tel"
                             className="form-control"
                             autoComplete="off"
+                            placeholder="Enter tel"
+                            value={contact.tel}
+                            onChange={(e) => handleContactChange(e)}
                           />
-                          {submitted && !contact.tel && (
+                          {/*submitted && !contact.tel && (
                             <span className="text-danger form-text">
                               Tel is required
                             </span>
-                          )}
+                          )*/}
                         </div>
-                        <div className="col-6">
+                        <div className="col-12 col-md-4">
                           <label
                             htmlFor="email"
                             className={cx("form-label", "label")}>
@@ -304,19 +371,22 @@ function Register() {
                             name="email"
                             className="form-control"
                             autoComplete="off"
+                            placeholder="Enter email"
+                            value={contact.email}
+                            onChange={(e) => handleContactChange(e)}
                           />
-                          {submitted && !contact.email && (
+                          {/*submitted && !contact.email && (
                             <span className="text-danger form-text">
                               Email is required
                             </span>
-                          )}
+                          )*/}
                         </div>
                       </div>
                       <div className="row mb-4 border-top position-relative py-3">
                         <div>
                           <label className={cx("group-label")}>Address</label>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12 col-md-4">
                           <label
                             htmlFor="state"
                             className={cx("form-label", "label")}>
@@ -337,13 +407,13 @@ function Register() {
                               </option>
                             ))}
                           </select>
-                          {submitted && address.state === "" && (
+                          {/*submitted && address.state === "" && (
                             <span className="text-danger form-text">
                               State is required
                             </span>
-                          )}
+                          )*/}
                         </div>
-                        <div className="col-4">
+                        <div className="col-12 col-md-4">
                           <label
                             htmlFor="suburb"
                             className={cx("form-label", "label")}>
@@ -366,13 +436,13 @@ function Register() {
                               </option>
                             ))}
                           </select>
-                          {submitted && address.suburb === "" && (
+                          {/*submitted && address.suburb === "" && (
                             <span className="text-danger form-text">
                               Suburb is required
                             </span>
-                          )}
+                          )*/}
                         </div>
-                        <div className="col-4">
+                        <div className="col-12 col-md-4">
                           <label
                             htmlFor="postCode"
                             className={cx("form-label", "label")}>
@@ -385,24 +455,50 @@ function Register() {
                             className="form-control"
                             value={address.postCode}
                             disabled
+                            readOnly
+                            tabIndex="-1"
+                            style={{
+                              userSelect: "none",
+                              caretColor: "transparent",
+                            }}
                             autoComplete="off"
                           />
-                          {submitted && address.postCode === "" && (
+                          {/*submitted && !address.postCode && (
                             <span className="text-danger form-text">
                               Post Code is required
                             </span>
-                          )}
+                          )*/}
+                        </div>
+                        <div className="col-12">
+                          <label
+                            htmlFor="addressDetail"
+                            className={cx("form-label", "label")}>
+                            Address Detail
+                          </label>
+                          <input
+                            id="addressDetail"
+                            type="text"
+                            name="addressDetail"
+                            className="form-control"
+                            placeholder="Enter address detail"
+                            value={address.addressDetail}
+                            onChange={(e) => handleAddressDetailChange(e)} />
+                          {/*submitted && !address.addressDetail && (
+                            <span className="text-danger form-text">
+                              Suburb is required
+                            </span>
+                          )*/}
                         </div>
                       </div>
                       <div className="row mb-4 border-top position-relative py-3">
                         <div>
                           <label className={cx("group-label")}>Permits</label>
                         </div>
-                        <div className="col-3">
+                        <div className="col-12 col-md-4">
                           <label
                             htmlFor="userLv"
                             className={cx("form-label", "label")}>
-                            User Level
+                            User Level <span className="text-danger">*</span>
                           </label>
                           <select
                             id="userLv"
@@ -417,17 +513,17 @@ function Register() {
                             <option value="1">Level 2</option>
                             <option value="2">Level 3</option>
                           </select>
-                          {submitted && permits.userLv === "" && (
+                          {/*submitted && permits.userLv === "" && (
                             <span className="text-danger form-text">
                               User Level is required
                             </span>
-                          )}
+                          )*/}
                         </div>
-                        <div className="col-3">
+                        <div className="col-12 col-md-4">
                           <label
                             htmlFor="loginPermit"
                             className={cx("form-label", "label")}>
-                            Login Permit
+                            Login Permit <span className="text-danger">*</span>
                           </label>
                           <select
                             id="loginPermit"
@@ -438,14 +534,14 @@ function Register() {
                             <option value="" hidden>
                               Choose
                             </option>
-                            <option value="0">Off</option>
                             <option value="1">On</option>
+                            <option value="2">Off</option>
                           </select>
-                          {submitted && permits.loginPermit === "" && (
+                          {/*submitted && permits.loginPermit === "" && (
                             <span className="text-danger form-text">
                               Login Permit is required
                             </span>
-                          )}
+                          )*/}
                         </div>
                       </div>
                       <button

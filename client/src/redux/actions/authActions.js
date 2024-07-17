@@ -14,8 +14,7 @@ export const login = (credentials) => async (dispatch) => {
       payload: decoded,
     });
   } catch (err) {
-    console.log(">>> Check error: ", err);
-    return err
+    return Promise.reject(err.data ? err.data : err);
   }
 };
 

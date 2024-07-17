@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import classNames from "classnames/bind";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,7 +15,16 @@ const cx = classNames.bind(styles);
 
 function Login() {
   const navigate = useNavigate();
-  const notify = (msg) => toast.warning(msg);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.registerSuccess) {
+      toast.success("Registration successful! Please login.");
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, navigate, location.pathname]);
+
+  const notify = (type, msg) => toast[type](msg);
 
   const [credentials, setCredentials] = useState({
     username: "",
@@ -38,13 +47,19 @@ function Login() {
       return;
     }
     setLoading(true);
-    const res = await dispatch(login(credentials));
-    if (res.data && res.data.StatusCode === 400) {
-      notify(res.data.Message);
+    try {
+      const res = await dispatch(login(credentials));
+      if (res && res.payload) {
+        navigate("/");
+      }
+    } catch (err) {
+      if (err.Message) {
+        notify("warning", err.Message);
+      } else {
+        notify("error", "Unable to connect to server");
+      }
     }
-    if (res && res.payload) {
-      navigate("/");
-    }
+
     setLoading(false);
   };
 
@@ -148,7 +163,7 @@ function Login() {
           </div>
         </div>
       </div>
-      <ToastContainer theme="colored"/>
+      <ToastContainer theme="colored" />
     </div>
   );
 }

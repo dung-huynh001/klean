@@ -6,23 +6,26 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.response.use(
   (res) => {
-    if(res.data && res.data.StatusCode === 400) {
-      return Promise.reject(res)
-    } 
     return res;
   },
   (err) => {
-    if (err.response && [401, 403].includes(err.response.status)) {
-      window.location.href = "/login";
+    console.log(">>> Check Errors: ", err);
+    const { code, ...errDetails } = err;
+    if (code === "ERR_NETWORK") {
+      return Promise.reject(err);
+    } else {
+      const { response } = errDetails;
+      if (response && [401, 403].includes(response.status)) {
+        window.location.href = "/login";
+      }
+      return Promise.reject(response);
     }
-    return Promise.reject(err);
   }
 );
 
 export const handleRequest = async (axiosPromise) => {
   try {
     const res = await axiosPromise;
-    console.log(res)
     return res.data;
   } catch (err) {
     throw err;
