@@ -1,4 +1,3 @@
-import { Navigate } from "react-router-dom";
 import { LOGIN_SUCCESS, LOGOUT } from "../types/authTypes";
 import { jwtDecode } from "jwt-decode";
 
@@ -8,10 +7,15 @@ const initialState = {
 };
 
 const token = localStorage.getItem("token");
+
+function isTokenExpired(exp) {
+  const currentTime = Math.floor(Date.now() / 1000);
+  return currentTime > exp;
+}
+
 try {
   const deToken = (token === null || token === undefined) ? null : jwtDecode(token);
-  if (deToken && deToken.exp && deToken.exp >=  Date.now()) {
-
+  if (deToken && !isTokenExpired(deToken.exp)) {
     initialState.isAuthenticated = true;
     initialState.user = deToken;
   }

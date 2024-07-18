@@ -124,7 +124,8 @@ function Register() {
       ...permits,
       userId: parseInt(accountInformation.userId),
       postCode: address.postCode === "" ? 0 : parseInt(address.postCode),
-      loginPermit: Boolean(permits.loginPermit)
+      loginPermit: permits.loginPermit === 1,
+      userLv: parseInt(permits.userLv)
     }
     setSubmitted(true);
     const hasEmptyRequiredField = requiredFields.some(field => !registerData[field]);
@@ -509,9 +510,9 @@ function Register() {
                             <option value="" hidden>
                               Choose
                             </option>
-                            <option value="0">Level 1</option>
-                            <option value="1">Level 2</option>
-                            <option value="2">Level 3</option>
+                            <option value="1">Level 1</option>
+                            <option value="2">Level 2</option>
+                            <option value="3">Level 3</option>
                           </select>
                           {/*submitted && permits.userLv === "" && (
                             <span className="text-danger form-text">

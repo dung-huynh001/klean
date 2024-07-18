@@ -15,9 +15,10 @@ axiosInstance.interceptors.response.use(
       return Promise.reject(err);
     } else {
       const { response } = errDetails;
-      if (response && [401, 403].includes(response.status)) {
-        window.location.href = "/login";
-      }
+      // if (response && [401, 403].includes(response.status)) {
+      //   localStorage.removeItem("token");
+      //   window.location.href = "/login";
+      // }
       return Promise.reject(response);
     }
   }

@@ -8,8 +8,8 @@ namespace Domain.Enums
 {
     public enum UserLv
     {
-        Lv1,
-        Lv2,
-        Lv3,
+        Lv1 = 1,
+        Lv2 = 2,
+        Lv3 = 3,
     }
 }
