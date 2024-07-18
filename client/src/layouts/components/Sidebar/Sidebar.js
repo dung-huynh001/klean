@@ -1,34 +1,55 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import classNames from "classnames/bind";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faThumbTack } from "@fortawesome/free-solid-svg-icons";
 
 import styles from "./Sidebar.modules.scss";
 import logoBrand from "~/assets/images/logo-brand.jpg";
 
-
 const cx = classNames.bind(styles);
 function Sidebar() {
-    const [showMenu, setShowMenu] = useState(true);
+  const navigate = useNavigate();
+  const [showMenu, setShowMenu] = useState(true);
+  const [iconPin, setIconPin] = useState(faThumbTack);
 
-    return (
-        <sidebar className={cx("wrapper", {
-            "show": showMenu
-        })}>
-            <div className={cx("inner", "position-relative")}>
-                <div className={cx("brand")}>
-                    <img src={logoBrand} alt="logo-brand" />
-                </div>
-                <div className={cx("icon", "position-absolute top-0 end-0")}>
-                    <button
-                        className={cx("btn text-white")}
-                        onClick={() => setShowMenu(!showMenu)}>
-                        <FontAwesomeIcon icon={faBars} />
-                    </button>
-                </div>
-            </div>
-        </sidebar>
-    );
+  const handleIconClick = () => {
+    setShowMenu(!showMenu);
+    setIconPin(() => {
+      return iconPin === faBars ? faThumbTack : faBars;
+    });
+  };
+
+  return (
+    <aside
+      className={cx("wrapper", {
+        show: showMenu,
+      })}>
+      <div className={cx("inner", "position-relative")}>
+        <div
+          className={cx("brand")}
+          onClick={() => {
+            navigate("/");
+          }}>
+          <img src={logoBrand} alt="logo-brand" />
+          <h3
+            className="fw-bold"
+            style={{
+              letterSpacing: ".2rem",
+            }}>
+            CUSC
+          </h3>
+        </div>
+        <div className={cx("icon", "position-absolute top-0 end-0")}>
+          <button
+            className={cx("btn text-white")}
+            onClick={() => handleIconClick()}>
+            <FontAwesomeIcon icon={iconPin} />
+          </button>
+        </div>
+      </div>
+    </aside>
+  );
 }
 
 export default Sidebar;

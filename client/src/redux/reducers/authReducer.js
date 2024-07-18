@@ -10,7 +10,7 @@ const initialState = {
 const token = localStorage.getItem("token");
 try {
   const deToken = (token === null || token === undefined) ? null : jwtDecode(token);
-  if (deToken && deToken.exp && deToken.exp < Date.now()) {
+  if (deToken && deToken.exp && deToken.exp >=  Date.now()) {
 
     initialState.isAuthenticated = true;
     initialState.user = deToken;

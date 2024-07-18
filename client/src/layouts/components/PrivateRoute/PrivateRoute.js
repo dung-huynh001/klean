@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 const PrivateRoute = ({ component: Component, layout: Layout, ...rest }) => {
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-    const redirect = useNavigate();
+    const navigate = useNavigate();
     return (
         <Route
             {...rest}
@@ -12,7 +12,7 @@ const PrivateRoute = ({ component: Component, layout: Layout, ...rest }) => {
                 isAuthenticated ? (
                     <Layout><Component {...props} /></Layout>
                 ) : (
-                    redirect("/login")
+                    navigate("/login")
                 )
             }
         />
