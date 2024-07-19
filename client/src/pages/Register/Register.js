@@ -13,9 +13,16 @@ import axiosInstance from "~/utils/request";
 
 const cx = classNames.bind(styles);
 
-const defaultRegisterDate = (new Date()).toLocaleDateString("fr-CA");
+const defaultRegisterDate = new Date().toLocaleDateString("fr-CA");
 
-const requiredFields = ["username", "password", "userId", "userLv", "loginPermit", "registerDate"]
+const requiredFields = [
+  "username",
+  "password",
+  "userId",
+  "userLv",
+  "loginPermit",
+  "registerDate",
+];
 
 function Register() {
   const navigate = useNavigate();
@@ -28,7 +35,7 @@ function Register() {
   const [accountInformation, setAccountInformation] = useState({
     userId: "",
     password: "",
-    registerDate: defaultRegisterDate
+    registerDate: defaultRegisterDate,
   });
 
   const [userDetail, setUserDetail] = useState({
@@ -69,17 +76,19 @@ function Register() {
       ...userDetail,
       [e.target.name]: e.target.value,
     });
-  }
+  };
 
   const handleContactChange = (e) => {
     setContact({
       ...contact,
       [e.target.name]: e.target.value,
     });
-  }
+  };
 
   const handleStateChange = (value) => {
-    const filterStates = addressData.filter((item) => item.id === parseInt(value));
+    const filterStates = addressData.filter(
+      (item) => item.id === parseInt(value)
+    );
     setSuburbs(filterStates.at(0).suburb);
     setAddress({
       ...address,
@@ -102,9 +111,9 @@ function Register() {
   const handleAddressDetailChange = (e) => {
     setAddress({
       ...address,
-      addressDetail: e.target.value
-    })
-  }
+      addressDetail: e.target.value,
+    });
+  };
 
   const handlePermitsChange = (e) => {
     setPermits({
@@ -112,7 +121,6 @@ function Register() {
       [e.target.name]: e.target.value,
     });
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -125,10 +133,16 @@ function Register() {
       userId: parseInt(accountInformation.userId),
       postCode: address.postCode === "" ? 0 : parseInt(address.postCode),
       loginPermit: permits.loginPermit === 1,
-      userLv: parseInt(permits.userLv)
-    }
+      userLv: parseInt(permits.userLv),
+    };
+    console.log(registerData);
     setSubmitted(true);
-    const hasEmptyRequiredField = requiredFields.some(field => !registerData[field]);
+    const hasEmptyRequiredField = requiredFields.some(
+      (field) =>
+        registerData[field] === null ||
+        registerData[field] === undefined ||
+        registerData[field] === ""
+    );
     if (hasEmptyRequiredField) {
       notify("warning", "Please fill in all required fields");
       return;
@@ -139,12 +153,12 @@ function Register() {
       const res = await axiosInstance.post("Auth/Register", registerData, {});
       if (res) {
         notify("success", "User account registration successful");
-        navigate('/login', { state: { registerSuccess: true } });
+        navigate("/login", { state: { registerSuccess: true } });
       } else {
         notify("warning", "Something went wrong");
       }
     } catch (err) {
-      console.log(">>> Register check:", err)
+      console.log(">>> Register check:", err);
       if (err.data && err.data.Message) {
         notify("warning", err.data.Message);
       } else {
@@ -483,7 +497,8 @@ function Register() {
                             className="form-control"
                             placeholder="Enter address detail"
                             value={address.addressDetail}
-                            onChange={(e) => handleAddressDetailChange(e)} />
+                            onChange={(e) => handleAddressDetailChange(e)}
+                          />
                           {/*submitted && !address.addressDetail && (
                             <span className="text-danger form-text">
                               Suburb is required

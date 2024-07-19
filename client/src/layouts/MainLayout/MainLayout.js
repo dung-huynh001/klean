@@ -28,7 +28,7 @@ function MainLayout() {
             notify("success", "Authorization successful");
 
         } catch (e) {
-            notify("error", "Authorization failed");
+            notify("error", "UnAuthorization");
         }
     }
     return (
