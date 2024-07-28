@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import classNames from "classnames/bind";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faThumbTack } from "@fortawesome/free-solid-svg-icons";
@@ -35,7 +35,7 @@ function Sidebar() {
           <h3
             className="fw-bold"
             style={{
-              letterSpacing: ".2rem",
+              letterSpacing: ".1rem",
             }}>
             CUSC
           </h3>
@@ -47,6 +47,9 @@ function Sidebar() {
             <FontAwesomeIcon icon={iconPin} />
           </button>
         </div>
+        <ul className="d-flex flex-column gap-2">
+            <li><Link>Manage Users</Link></li>
+        </ul>
       </div>
     </aside>
   );

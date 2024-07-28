@@ -39,21 +39,17 @@ function Header() {
         </div>
         <Tippy
           interactive={true}
-          // placement="top-start"
           render={attrs =>
           (
-            <div
-              className="d-flex flex-column gap-2 bg-white p-2"
-              style={{
-                minWidth: "180px"
-              }}
+            <ul
+              className={cx("user-dropdown", "d-flex flex-column gap-2 p-2 rounded")}
               tabIndex="-1" {...attrs}>
-              <span className="p-2" onClick={() => handleLogOut()}>Sign out</span>
-            </div>
+              <li className={cx("user-item", "p-2 rounded")} onClick={() => handleLogOut()}>Sign out</li>
+            </ul>
           )}>
-          <div className={cx("user-dropdown", "d-flex align-items-center gap-2")}>
+          <div className={cx("d-flex align-items-center gap-2")}>
             <FontAwesomeIcon icon={faUser} className={cx("user-icon")} />
-            <p className={cx("user-text", "m-0")}>Hello, {userDetail.name}</p>
+            <p className={cx("m-0")}>Hello, {userDetail.name}</p>
           </div>
         </Tippy>
       </div>
