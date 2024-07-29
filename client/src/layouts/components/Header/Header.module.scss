@@ -19,3 +19,15 @@
         border-radius: 5px;
     }
 }
+
+.user-dropdown {
+    list-style-type: none;
+    background-color: #e2eaf6;
+    min-width: 180px;
+    .user-item {
+        &:hover {
+            background-color: #e3e7f1;
+            color: #fff;
+        }
+    }
+}

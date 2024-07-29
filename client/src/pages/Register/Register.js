@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { faSync } from "@fortawesome/free-solid-svg-icons";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import validator from "validator"
 
 import styles from "./Register.module.scss";
 import { address as data } from "./data";
@@ -57,7 +58,7 @@ function Register() {
   });
 
   const [permits, setPermits] = useState({
-    userLv: 2,
+    userLv: 3,
     loginPermit: 2,
   });
 
@@ -116,6 +117,7 @@ function Register() {
   };
 
   const handlePermitsChange = (e) => {
+    console.log(e.target.value);
     setPermits({
       ...permits,
       [e.target.name]: e.target.value,
@@ -184,7 +186,6 @@ function Register() {
       loginPermit: permits.loginPermit === 1,
       userLv: parseInt(permits.userLv),
     };
-    console.log(registerData);
     setSubmitted(true);
     const hasEmptyRequiredField = requiredFields.some(
       (field) =>
@@ -253,7 +254,7 @@ function Register() {
                     </h5>
                   </div>
                   <div className="p-2 mt-4">
-                    <form className="form-group">
+                    <form className="form-group" onSubmit={(e) => handleSubmit(e)}>
                       <div className="row mb-4 border-top position-relative py-3">
                         <div>
                           <label className={cx("group-label")}>
@@ -421,11 +422,6 @@ function Register() {
                             value={contact.mobile}
                             onChange={(e) => handleContactChange(e)}
                           />
-                          {/*submitted && !contact.mobile && (
-                            <span className="text-danger form-text">
-                              Mobile is required
-                            </span>
-                          )*/}
                         </div>
                         <div className="col-12 col-md-4">
                           <label
@@ -443,11 +439,6 @@ function Register() {
                             value={contact.tel}
                             onChange={(e) => handleContactChange(e)}
                           />
-                          {/*submitted && !contact.tel && (
-                            <span className="text-danger form-text">
-                              Tel is required
-                            </span>
-                          )*/}
                         </div>
                         <div className="col-12 col-md-4">
                           <label
@@ -465,11 +456,6 @@ function Register() {
                             value={contact.email}
                             onChange={(e) => handleContactChange(e)}
                           />
-                          {/*submitted && !contact.email && (
-                            <span className="text-danger form-text">
-                              Email is required
-                            </span>
-                          )*/}
                         </div>
                       </div>
                       <div className="row mb-4 border-top position-relative py-3">
@@ -489,7 +475,7 @@ function Register() {
                             value={address.state}
                             onChange={(e) => handleStateChange(e.target.value)}>
                             <option value="" hidden>
-                              Choose
+                              --Select--
                             </option>
                             {addressData.map((item) => (
                               <option key={item.id} value={item.id}>
@@ -497,11 +483,6 @@ function Register() {
                               </option>
                             ))}
                           </select>
-                          {/*submitted && address.state === "" && (
-                            <span className="text-danger form-text">
-                              State is required
-                            </span>
-                          )*/}
                         </div>
                         <div className="col-12 col-md-4">
                           <label
@@ -518,7 +499,7 @@ function Register() {
                               handleSuburbChange(e.target.value)
                             }>
                             <option value="" hidden>
-                              Choose
+                              --Select--
                             </option>
                             {suburbs.map((item) => (
                               <option key={item.id} value={item.id}>
@@ -526,11 +507,6 @@ function Register() {
                               </option>
                             ))}
                           </select>
-                          {/*submitted && address.suburb === "" && (
-                            <span className="text-danger form-text">
-                              Suburb is required
-                            </span>
-                          )*/}
                         </div>
                         <div className="col-12 col-md-4">
                           <label
@@ -544,6 +520,7 @@ function Register() {
                             name="postCode"
                             className="form-control"
                             value={address.postCode}
+                            placeholder="Post Code will be auto-filled"
                             disabled
                             readOnly
                             tabIndex="-1"
@@ -553,11 +530,6 @@ function Register() {
                             }}
                             autoComplete="off"
                           />
-                          {/*submitted && !address.postCode && (
-                            <span className="text-danger form-text">
-                              Post Code is required
-                            </span>
-                          )*/}
                         </div>
                         <div className="col-12">
                           <label
@@ -574,11 +546,6 @@ function Register() {
                             value={address.addressDetail}
                             onChange={(e) => handleAddressDetailChange(e)}
                           />
-                          {/*submitted && !address.addressDetail && (
-                            <span className="text-danger form-text">
-                              Suburb is required
-                            </span>
-                          )*/}
                         </div>
                       </div>
                       <div className="row mb-4 border-top position-relative py-3">
@@ -598,21 +565,15 @@ function Register() {
                             value={permits.userLv}
                             onChange={(e) => handlePermitsChange(e)}>
                             <option value="" hidden>
-                              Choose
+                              --Select--
                             </option>
                             <option value="1">Level 1</option>
                             <option value="2">Level 2</option>
                             <option value="3">Level 3</option>
                           </select>
-                          {/*submitted && permits.userLv === "" && (
-                            <span className="text-danger form-text">
-                              User Level is required
-                            </span>
-                          )*/}
                         </div>
                         <div className="col-12 col-md-4">
                           <label
-                            htmlFor="loginPermit"
                             className={cx("form-label", "label")}>
                             Login Permit <span className="text-danger">*</span>
                           </label>
@@ -628,11 +589,17 @@ function Register() {
                             <option value="1">On</option>
                             <option value="2">Off</option>
                           </select>
-                          {/*submitted && permits.loginPermit === "" && (
-                            <span className="text-danger form-text">
-                              Login Permit is required
-                            </span>
-                          )*/}
+                          {/*<div className="form-check form-switch">
+                            <input
+                              className="form-check-input"
+                              type="checkbox" 
+                              id="loginPermit"
+                              name="loginPermit"
+                              value={permits.loginPermit}
+                              checked={permits.loginPermit}
+                              onChange={(e) => handlePermitsChange(e)} />
+                            <label className="form-check-label" htmlFor="loginPermit">{permits.loginPermit}</label>
+                          </div>*/}
                         </div>
                       </div>
                       <button
@@ -641,8 +608,7 @@ function Register() {
                           "btn btn-success w-100 mt-3",
                           "btn-submit"
                         )}
-                        disabled={loading}
-                        onClick={(e) => handleSubmit(e)}>
+                        disabled={loading}>
                         {loading && <FontAwesomeIcon icon={faSync} spin />} Sign
                         Up
                       </button>
