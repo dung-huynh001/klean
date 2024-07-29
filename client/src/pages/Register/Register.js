@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import classNames from "classnames/bind";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -122,6 +122,55 @@ function Register() {
     });
   };
 
+  const [isInValidUserId, setIsInValidUserId] = useState(false);
+  const [isInValidUsername, setIsInValidUsername] = useState(false);
+  const [isInValidPassword, setIsInValidPassword] = useState(false);
+
+  const validateRequireInputField = (data) => {
+    const requireInputField = ["userId", "username", "password"];
+    let isValid = true;
+
+    requireInputField.forEach((field) => {
+      if (data[field].length < 8) {
+        isValid = false;
+        switch (field) {
+          case "userId":
+            setIsInValidUserId(true);
+            break;
+          case "username":
+            setIsInValidUsername(true);
+            break;
+          case "password":
+            setIsInValidPassword(true);
+            break;
+          default:
+            break;
+        }
+      } else {
+        switch (field) {
+          case "userId":
+            setIsInValidUserId(false);
+            break;
+          case "username":
+            setIsInValidUsername(false);
+            break;
+          case "password":
+            setIsInValidPassword(false);
+            break;
+          default:
+            break;
+        }
+      }
+
+      if (field === "userId" && (isNaN(data[field]) || parseInt(data[field]) < 10000000)) {
+        isValid = false;
+        setIsInValidUserId(true);
+      }
+    });
+
+    return isValid;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const registerData = {
@@ -147,6 +196,10 @@ function Register() {
       notify("warning", "Please fill in all required fields");
       return;
     }
+
+    const isValid = validateRequireInputField(registerData);
+
+    if (!isValid) return;
 
     setLoading(true);
     try {
@@ -229,6 +282,14 @@ function Register() {
                               User Id is required
                             </span>
                           )}
+
+                          {submitted &&
+                            accountInformation.userId &&
+                            isInValidUserId && (
+                              <span className="text-danger form-text">
+                                User ID must be an 8-digit number
+                              </span>
+                            )}
                         </div>
                         <div className="col-12 col-md-4">
                           <label
@@ -252,6 +313,13 @@ function Register() {
                               Password is required
                             </span>
                           )}
+                          {submitted &&
+                            accountInformation.password &&
+                            isInValidPassword && (
+                              <span className="text-danger form-text">
+                                Password must be 8 - 100 characters
+                              </span>
+                            )}
                         </div>
                         <div className="col-12 col-md-4 ms-auto">
                           <label
@@ -303,6 +371,13 @@ function Register() {
                               Username is required
                             </span>
                           )}
+                          {submitted &&
+                            userDetail.username &&
+                            isInValidUsername && (
+                              <span className="text-danger form-text">
+                                Username must be 8 - 20 characters
+                              </span>
+                            )}
                         </div>
                         <div className="col-12 col-md-4 ms-auto">
                           <label
