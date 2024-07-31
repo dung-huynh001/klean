@@ -1,7 +1,7 @@
 import classNames from "classnames/bind";
 import styles from "./MainLayout.module.scss";
 import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
+import Sidebar2 from "../components/Sidebar/Sidebar2";
 import Footer from "../components/Footer";
 
 const cx = classNames.bind(styles);
@@ -10,7 +10,7 @@ const cx = classNames.bind(styles);
 function MainLayout({ children }) {
     return (
         <div className={cx("wrapper", "d-flex")}>
-            <Sidebar />
+            <Sidebar2 />
             <main className={cx("inner", "flex-fill")}>
                 <Header />
                 <div className={cx("content", "container position-relative")}> {children} </div>

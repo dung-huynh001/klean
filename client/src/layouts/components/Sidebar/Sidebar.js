@@ -32,11 +32,7 @@ function Sidebar() {
             navigate("/");
           }}>
           <img src={logoBrand} alt="logo-brand" />
-          <h3
-            className="fw-bold"
-            style={{
-              letterSpacing: ".1rem",
-            }}>
+          <h3 className="fw-bold">
             CUSC
           </h3>
         </div>
@@ -48,7 +44,7 @@ function Sidebar() {
           </button>
         </div>
         <ul className="d-flex flex-column gap-2">
-            <li><Link>Manage Users</Link></li>
+          <li><Link>Manage Users</Link></li>
         </ul>
       </div>
     </aside>
