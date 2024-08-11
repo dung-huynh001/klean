@@ -1,4 +1,3 @@
-import classNames from "classnames/bind";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import Footer from "../components/Footer";
@@ -11,7 +10,9 @@ function MainLayout({ children }) {
             <Sidebar />
             <main className="flex-fill">
                 <Header />
-                <div> {children} </div>
+                <div className="p-3">
+                    {children}
+                </div>
                 <Footer />
             </main>
         </div>

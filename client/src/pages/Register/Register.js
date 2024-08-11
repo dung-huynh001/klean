@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import classNames from "classnames/bind";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import { faSync } from "@fortawesome/free-solid-svg-icons";
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import validator from "validator"
+// import "react-toastify/dist/ReactToastify.css";
 
 import styles from "./Register.module.scss";
 import { address as data } from "./data";
@@ -523,7 +522,6 @@ function Register() {
                             placeholder="Post Code will be auto-filled"
                             disabled
                             readOnly
-                            tabIndex="-1"
                             style={{
                               userSelect: "none",
                               caretColor: "transparent",

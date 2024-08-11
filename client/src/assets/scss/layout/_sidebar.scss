@@ -1,6 +1,7 @@
 .sidebarArea {
   flex-shrink: 0;
   width: $sidebarWidth;
+  min-height: 100vh;
   background-color: $sidebarColor;
   .sidenav-bg:hover {
     background-color: $gray-100;

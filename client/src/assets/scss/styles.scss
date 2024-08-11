@@ -3,3 +3,14 @@
 @import "bootstrap-icons/font/bootstrap-icons.scss";
 @import "./layout/sidebar";
 @import "./layout/container";
+
+a {
+    text-decoration: none;
+}
+
+.btn-collapse {
+     &:hover {
+        background-color: #f8f9fa !important;
+        border-radius: 0.3rem;
+    }
+}

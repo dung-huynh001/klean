@@ -1,12 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import {
   Navbar,
   Collapse,
-  Nav,
-  NavItem,
   NavbarBrand,
-  UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
@@ -14,9 +12,16 @@ import {
   Button,
 } from "reactstrap";
 import Logo from "~/assets/images/logo-brand.jpg";
-import user1 from "~/assets/images/auth-bg.jpg";
+import user from "~/assets/images/default-user.jpg";
+import { logout } from "~/redux/actions/authActions";
+import { getToken, decodeToken } from "~/core/services/common/tokenService";
+
 
 const Header = () => {
+  const token = getToken();
+  const userInfo = decodeToken(token);
+  console.log(userInfo);
+
   const [isOpen, setIsOpen] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
@@ -27,10 +32,17 @@ const Header = () => {
   const showMobilemenu = () => {
     document.getElementById("sidebarArea").classList.toggle("showSidebar");
   };
+
+  const dispatch = useDispatch<any>();
+
+  const handleLogout = async () => {
+    await dispatch(logout());
+  }
+
   return (
     <Navbar color="primary" dark expand="md">
       <div className="d-flex align-items-center">
-        <NavbarBrand href="/" className="d-lg-none">
+        <NavbarBrand href="/" className="d-lg-none" >
           <img src={Logo} alt="Logo" className="rounded-pill" style={{
             width: '50px',
             objectFit: 'cover'
@@ -61,22 +73,19 @@ const Header = () => {
 
       <Collapse navbar isOpen={isOpen}>
         <Dropdown isOpen={dropdownOpen} toggle={toggle} className="ms-auto">
-          <DropdownToggle color="primary">
+          <DropdownToggle color="primary" className="d-flex justify-content-center align-items-center gap-3">
             <img
-              src={user1}
+              src={user}
               alt="profile"
               className="rounded-circle"
               width="30"
-            ></img> <span>Hi User.</span>
+            ></img>
+            <span>Hello, {userInfo.name}</span>
           </DropdownToggle>
           <DropdownMenu>
-            <DropdownItem header>Info</DropdownItem>
-            <DropdownItem>My Account</DropdownItem>
-            <DropdownItem>Edit Profile</DropdownItem>
-            <DropdownItem divider />
-            <DropdownItem>My Balance</DropdownItem>
-            <DropdownItem>Inbox</DropdownItem>
-            <DropdownItem>Logout</DropdownItem>
+            <DropdownItem><Link to={`/profile/${userInfo.nameidentifier}`}>Profile</Link></DropdownItem>
+            <DropdownItem divider></DropdownItem>
+            <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </Collapse>

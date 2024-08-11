@@ -1,4 +1,16 @@
-export const address = [
+export interface SuburbType {
+    id: number,
+    name: string,
+    postCode: number,
+}
+
+export interface AddressType {
+    id: number,
+    state: string,
+    suburb: SuburbType[]
+}
+
+export const address: AddressType[] = [
     {
         id: 1,
         state: "Can Tho",

@@ -6,8 +6,8 @@ function Footer() {
                 style={{
                     minHeight: "50px"
                 }}>
-                <div className="">2024 &copy; CUSC</div>
-                <div className="">Powered by CUSC - ITO</div>
+                <span className="">2024 &copy; CUSC</span>
+                <span className="">Powered by CUSC - ITO</span>
             </div>
         </footer>
     );

@@ -34,7 +34,7 @@ function Login() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -106,6 +106,7 @@ function Login() {
                           name="username"
                           className="form-control"
                           value={credentials.username}
+                          placeholder="Enter username"
                           onChange={(e) => handleChange(e)}
                           autoComplete="off"
                         />
@@ -127,6 +128,7 @@ function Login() {
                           name="password"
                           className="form-control"
                           value={credentials.password}
+                          placeholder="Enter password"
                           onChange={(e) => handleChange(e)}
                           autoComplete="off"
                         />
@@ -139,7 +141,7 @@ function Login() {
                       <button
                         type="submit"
                         className={cx(
-                          "btn btn-success w-100 mt-3",
+                          "btn btn-primary w-100 mt-3",
                           "btn-submit"
                         )}
                         disabled={loading}
