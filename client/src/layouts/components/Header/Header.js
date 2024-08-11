@@ -1,60 +1,87 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import classNames from "classnames/bind";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faUser } from "@fortawesome/free-solid-svg-icons";
-import Tippy from '@tippyjs/react/headless';
-import 'tippy.js/dist/tippy.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import {
+  Navbar,
+  Collapse,
+  Nav,
+  NavItem,
+  NavbarBrand,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  Dropdown,
+  Button,
+} from "reactstrap";
+import Logo from "~/assets/images/logo-brand.jpg";
+import user1 from "~/assets/images/auth-bg.jpg";
 
-import { getToken, decodeToken } from "~/core/services/common/tokenService";
-import styles from "./Header.module.scss";
-import { logout } from "~/redux/actions/authActions";
+const Header = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
-const cx = classNames.bind(styles);
-
-function Header() {
-  const token = getToken();
-  const userDetail = decodeToken(token);
-
-  const dispatch = useDispatch();
-
-  const handleLogOut = async () => {
-    dispatch(logout());
-  }
-
+  const toggle = () => setDropdownOpen((prevState) => !prevState);
+  const Handletoggle = () => {
+    setIsOpen(!isOpen);
+  };
+  const showMobilemenu = () => {
+    document.getElementById("sidebarArea").classList.toggle("showSidebar");
+  };
   return (
-    <header className="position-relative px-3 top-0 w-100 bg-white">
-      <div
-        className="d-flex justify-content-between align-items-center"
-        style={{
-          minHeight: "60px",
-        }}>
-        <div className={cx("search")}>
-          <FontAwesomeIcon icon={faSearch} className={cx("search-icon")} />
-          <input
-            className={cx("search-input")}
-            type="text"
-            placeholder="Search..."
-          />
-        </div>
-        <Tippy
-          interactive={true}
-          render={attrs =>
-          (
-            <ul
-              className={cx("user-dropdown", "d-flex flex-column gap-2 p-2 rounded")}
-              tabIndex="-1" {...attrs}>
-              <li className={cx("user-item", "p-2 rounded")} onClick={() => handleLogOut()}>Sign out</li>
-            </ul>
-          )}>
-          <div className={cx("d-flex align-items-center gap-2")}>
-            <FontAwesomeIcon icon={faUser} className={cx("user-icon")} />
-            <p className={cx("m-0")}>Hello, {userDetail.name}</p>
-          </div>
-        </Tippy>
+    <Navbar color="primary" dark expand="md">
+      <div className="d-flex align-items-center">
+        <NavbarBrand href="/" className="d-lg-none">
+          <img src={Logo} alt="Logo" className="rounded-pill" style={{
+            width: '50px',
+            objectFit: 'cover'
+          }} />
+        </NavbarBrand>
+        <Button
+          color="primary"
+          className="d-lg-none"
+          onClick={() => showMobilemenu()}
+        >
+          <i className="bi bi-list"></i>
+        </Button>
       </div>
-    </header>
+      <div className="hstack gap-2">
+        <Button
+          color="primary"
+          size="sm"
+          className="d-sm-block d-md-none"
+          onClick={Handletoggle}
+        >
+          {isOpen ? (
+            <i className="bi bi-x"></i>
+          ) : (
+            <i className="bi bi-three-dots-vertical"></i>
+          )}
+        </Button>
+      </div>
+
+      <Collapse navbar isOpen={isOpen}>
+        <Dropdown isOpen={dropdownOpen} toggle={toggle} className="ms-auto">
+          <DropdownToggle color="primary">
+            <img
+              src={user1}
+              alt="profile"
+              className="rounded-circle"
+              width="30"
+            ></img> <span>Hi User.</span>
+          </DropdownToggle>
+          <DropdownMenu>
+            <DropdownItem header>Info</DropdownItem>
+            <DropdownItem>My Account</DropdownItem>
+            <DropdownItem>Edit Profile</DropdownItem>
+            <DropdownItem divider />
+            <DropdownItem>My Balance</DropdownItem>
+            <DropdownItem>Inbox</DropdownItem>
+            <DropdownItem>Logout</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </Collapse>
+    </Navbar>
   );
-}
+};
 
 export default Header;

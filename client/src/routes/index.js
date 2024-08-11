@@ -16,8 +16,6 @@ const publicRoutes = [
     component: Register,
     layout: null,
   },
-];
-const privateRoutes = [
   {
     path: "/",
     component: Home,
@@ -28,6 +26,18 @@ const privateRoutes = [
     component: Profile,
     layout: HeaderFooterLayout,
   },
+];
+const privateRoutes = [
+  // {
+  //   path: "/",
+  //   component: Home,
+  //   layout: MainLayout,
+  // },
+  // {
+  //   path: "/profile/:id",
+  //   component: Profile,
+  //   layout: HeaderFooterLayout,
+  // },
 ];
 
 export { publicRoutes, privateRoutes };
