@@ -48,22 +48,22 @@ namespace WebApi.Controllers
         }
 
         [Authorize(Roles="Lv1")]
-        [HttpGet("TestTokenUserLv1")]
-        public async Task<IActionResult> TestTokenUserLv1()
+        [HttpGet("ViewProfile/{id}")]
+        public async Task<IActionResult> ViewProfile(int id)
         {
             return Ok("Token valid");
         }
 
         [Authorize(Roles = "Lv2")]
-        [HttpGet("TestTokenUserLv2")]
-        public async Task<IActionResult> TestTokenUserLv2()
+        [HttpGet("UpdateUser/{id}")]
+        public async Task<IActionResult> UpdateUser(int id)
         {
             return Ok("Token valid");
         }
 
         [Authorize(Roles = "Lv3")]
-        [HttpGet("TestTokenUserLv3")]
-        public async Task<IActionResult> TestTokenUserLv3()
+        [HttpGet("UserList")]
+        public async Task<IActionResult> UserList()
         {
             return Ok("Token valid");
         }

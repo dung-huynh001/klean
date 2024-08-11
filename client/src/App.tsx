@@ -11,7 +11,7 @@ import { publicRoutes, privateRoutes } from "./routes";
 import MainLayout from "./layouts/MainLayout";
 
 function App() {
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const isAuthenticated = useSelector((state: any) => state.auth.isAuthenticated);
 
   return (
     <Router>
@@ -20,7 +20,7 @@ function App() {
           <Routes>
             {publicRoutes.map((route, index) => {
               const Page = route.component;
-              let Layout = MainLayout;
+              let Layout: any = MainLayout;
 
               if (route.layout) {
                 Layout = route.layout;
@@ -43,7 +43,7 @@ function App() {
 
             {privateRoutes.map((route, index) => {
               const PrivatePage = route.component;
-              let Layout = MainLayout;
+              let Layout: any = MainLayout;
 
               if (route.layout) {
                 Layout = route.layout;
