@@ -1,7 +1,7 @@
 ﻿namespace WebApi.ResponseModels
 {
-    public class AuthResponse
-    {
-        public string Token { get; set; }
-    }
+	public class AuthResponse
+	{
+		public string Token { get; set; }
+	}
 }

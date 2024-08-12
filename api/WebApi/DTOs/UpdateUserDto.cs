@@ -1,15 +1,8 @@
 ﻿using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace WebApi.DTOs
 {
-	[Table("user_table")]
-	public class AppUser
+	public class UpdateUserDto
 	{
 		public int UserId { get; set; }
 		public string Username { get; set; }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import classNames from "classnames/bind";
@@ -13,20 +13,25 @@ import { login } from "~/redux/actions/authActions";
 
 const cx = classNames.bind(styles);
 
+interface iCredentials {
+  username: string;
+  password: string;
+}
+
 function Login() {
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    if (location.state?.registerSuccess) {
+    if (location.state && location.state.registerSuccess) {
       toast.success("Registration successful! Please login.");
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location.state, navigate, location.pathname]);
 
-  const notify = (type, msg) => toast[type](msg);
+  const notify = (type: 'success' | 'error' | 'warning', msg: string) => toast[type](msg);
 
-  const [credentials, setCredentials] = useState({
+  const [credentials, setCredentials] = useState<iCredentials>({
     username: "",
     password: "",
   });
@@ -36,11 +41,11 @@ function Login() {
 
   const dispatch = useDispatch<any>();
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
     if (!credentials.username || !credentials.password) {
