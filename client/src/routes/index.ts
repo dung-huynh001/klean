@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { lazy } from 'react';
 
 // Lazy load the components
 const HeaderFooterLayout = lazy(() => import("~/layouts/HeaderFooterLayout/HeaderFooterLayout"));

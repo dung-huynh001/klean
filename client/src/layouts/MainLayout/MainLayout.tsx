@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 
 
 function MainLayout({ children }) {
+    console.log("MainLayout rendering...")
     return (
         <div className="d-flex">
             <Sidebar />

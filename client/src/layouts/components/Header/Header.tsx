@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
   Navbar,
@@ -20,7 +19,6 @@ import { getToken, decodeToken } from "~/core/services/common/tokenService";
 const Header = () => {
   const token = getToken();
   const userInfo = decodeToken(token);
-  console.log(userInfo);
 
   const [isOpen, setIsOpen] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
@@ -83,7 +81,7 @@ const Header = () => {
             <span>Hello, {userInfo.name}</span>
           </DropdownToggle>
           <DropdownMenu>
-            <DropdownItem><Link to={`/profile/${userInfo.nameidentifier}`}>Profile</Link></DropdownItem>
+            <DropdownItem href={`/profile/${userInfo.nameidentifier}`}>Profile</DropdownItem>
             <DropdownItem divider></DropdownItem>
             <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
           </DropdownMenu>

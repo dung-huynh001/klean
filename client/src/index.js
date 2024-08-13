@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import App from "./App";
 import GlobalStyles from "./components/GlobalStyles";
-import store from "./redux/stores/authStore";
+import store from "./redux/stores/store";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

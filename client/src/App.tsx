@@ -1,17 +1,15 @@
 import { Suspense } from 'react';
 import { Fragment } from "react";
-import { useSelector } from "react-redux";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
 } from "react-router-dom";
 import { publicRoutes, privateRoutes } from "./routes";
+import AuthGuard from './layouts/components/AuthGuard/AuthGuard';
 import MainLayout from "./layouts/MainLayout";
 
 function App() {
-  const isAuthenticated = useSelector((state: any) => state.auth.isAuthenticated);
 
   return (
     <Router>
@@ -42,7 +40,7 @@ function App() {
             })}
 
             {privateRoutes.map((route, index) => {
-              const PrivatePage = route.component;
+              const Page = route.component;
               let Layout: any = MainLayout;
 
               if (route.layout) {
@@ -56,13 +54,11 @@ function App() {
                   key={index}
                   path={route.path}
                   element={
-                    isAuthenticated ? (
+                    <AuthGuard>
                       <Layout>
-                        <PrivatePage />
+                        <Page />
                       </Layout>
-                    ) : (
-                      <Navigate to="/login" />
-                    )
+                    </AuthGuard>
                   }
                 />
               );
