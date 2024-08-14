@@ -1,15 +1,8 @@
 ﻿using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace WebApi.DTOs
 {
-	[Table("user_table")]
-	public class AppUser
+	public class CreateUserDto
 	{
 		public int UserId { get; set; }
 		public string Username { get; set; }
@@ -26,6 +19,5 @@ namespace Domain.Entities
 		public string AddressSuburb { get; set; }
 		public string AddressDetail { get; set; }
 		public int PostCode { get; set; }
-		public string Note { get; set; }
 	}
 }

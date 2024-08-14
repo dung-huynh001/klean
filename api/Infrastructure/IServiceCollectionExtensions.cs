@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace Infrastructure
 {
-    public static class IServiceCollectionExtensions
-    {
-        public static void AddInfrastructure(this IServiceCollection service, IConfiguration configuration)
-        {
-            service.AddDbContext<AppDbContext>((opt) =>
-            {
-                opt.UseSqlServer(configuration.GetConnectionString("DbConnectionString"));
-            });
-        }
-    }
+	public static class IServiceCollectionExtensions
+	{
+		public static void AddInfrastructure(this IServiceCollection service, IConfiguration configuration)
+		{
+			service.AddDbContext<AppDbContext>((opt) =>
+			{
+				opt.UseSqlServer(configuration.GetConnectionString("DbConnectionString"));
+			});
+		}
+	}
 }

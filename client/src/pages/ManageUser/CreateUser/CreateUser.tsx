@@ -10,7 +10,7 @@ import { address, SuburbType } from "~/pages/Register/data";
 const cx = classNames.bind(styles);
 
 type User = {
-    userId: number;
+    userId: number | string;
     userName: string;
     password: string;
     dateOfBirth: string;
@@ -23,7 +23,7 @@ type User = {
     addressState: string;
     addressSuburb: string;
     addressDetail: string;
-    postCode: number;
+    postCode: number | string;
     note: string;
 }
 
@@ -31,7 +31,7 @@ const defaultRegisterDate = new Date().toLocaleDateString("fr-CA");
 
 function CreateUser() {
     const [user, setUser] = useState<User>({
-        userId: null,
+        userId: '',
         userName: '',
         password: '',
         dateOfBirth: '',
@@ -44,7 +44,7 @@ function CreateUser() {
         addressState: '',
         addressSuburb: '',
         addressDetail: '',
-        postCode: null,
+        postCode: '',
         note: ''
     });
 
