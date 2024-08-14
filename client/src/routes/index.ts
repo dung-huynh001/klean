@@ -28,6 +28,11 @@ const publicRoutes: AppRoute[] = [
     component: Register,
     layout: null,
   },
+  {
+    path: "/profile",
+    component: Profile,
+    layout: HeaderFooterLayout,
+  },
 ];
 
 const privateRoutes: AppRoute[] = [
@@ -39,7 +44,7 @@ const privateRoutes: AppRoute[] = [
   {
     path: "/profile/:id",
     component: Profile,
-    layout: HeaderFooterLayout,
+    layout: MainLayout,
   },
   {
     path: "/createUser",

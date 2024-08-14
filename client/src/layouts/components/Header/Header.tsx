@@ -80,10 +80,10 @@ const Header = () => {
               className="rounded-circle"
               width="30"
             ></img>
-            <span>Hello, {userInfo.name}</span>
+            {/* <span>Hello, {userInfo.name}</span> */}
           </DropdownToggle>
           <DropdownMenu>
-            <DropdownItem><Link to={`/profile/${userInfo.nameidentifier}`}>Profile</Link></DropdownItem>
+            {/* <DropdownItem><Link to={`/profile/${userInfo.nameidentifier}`}>Profile</Link></DropdownItem> */}
             <DropdownItem divider></DropdownItem>
             <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
           </DropdownMenu>
