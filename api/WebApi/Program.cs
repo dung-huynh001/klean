@@ -3,6 +3,7 @@ using FluentValidation;
 using Infrastructure;
 using Infrastructure.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -15,6 +16,12 @@ using WebApi.Validations;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
+
+builder.WebHost
+	.UseKestrel()
+	.UseContentRoot(Directory.GetCurrentDirectory())
+	.UseUrls("https://localhost:7127", "https://172.16.1.46:7127")
+	.UseIISIntegration();
 
 // Add services to the container.
 builder.Services.AddInfrastructure(builder.Configuration);
