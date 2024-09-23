@@ -101,5 +101,43 @@ namespace WebApi.Services
 				UserId = user.UserId
 			};
 		}
+
+		public async Task<RegisterResponse> RegisterByGuestAsync(RegisterByGuestDto dto)
+		{
+			bool isIdUnique = ValidatorHelper<AppUser>.IsExist(_context, "UserId", dto.UserId);
+			bool isUsernameUnique = ValidatorHelper<AppUser>.IsExist(_context, "Username", dto.Username);
+
+			if (!isIdUnique)
+			{
+				throw new InvalidDataException("User Id already taken");
+			}
+
+			if (!isUsernameUnique)
+			{
+				throw new InvalidDataException("Username already taken");
+			}
+
+			string passwordHash = EncodeHelper.ComputeSHA256Hash(dto.Password);
+			AppUser user = new AppUser
+			{
+				UserId = dto.UserId,
+				Username = dto.Username,
+				Password = passwordHash,
+				DateOfBirth = dto.DateOfBirth,
+				LoginPermit = dto.LoginPermit,
+				UserLv = dto.UserLv,
+				RegisterDate = dto.RegisterDate,
+				AddressDetail = dto.AddressDetail,
+				AddressSuburb = dto.AddressSuburb,
+				AddressState = dto.AddressState,
+				PostCode = dto.PostCode,
+			};
+			await _context.Set<AppUser>().AddAsync(user);
+			await _context.SaveChangesAsync();
+			return new RegisterResponse
+			{
+				UserId = user.UserId
+			};
+		}
 	}
 }
