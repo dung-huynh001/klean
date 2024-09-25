@@ -20,7 +20,7 @@ IConfiguration configuration = builder.Configuration;
 builder.WebHost
 	.UseKestrel()
 	.UseContentRoot(Directory.GetCurrentDirectory())
-	.UseUrls("https://localhost:7127", "https://172.16.1.46:7127")
+	.UseUrls("https://localhost:7127", "https://192.168.3.38:7127")
 	.UseIISIntegration();
 
 // Add services to the container.
@@ -39,6 +39,7 @@ builder.Services.AddCors(options =>
 //Add Dependency Injection
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<ProfileService>();
 
 //Add Validator
 builder.Services.AddScoped<IValidator<RegisterDto>, RegisterDtoValidator>();
