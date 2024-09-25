@@ -13,25 +13,47 @@ namespace WebApi.Controllers
 	public class AuthController : ControllerBase
 	{
 		private readonly AuthService _authService;
-		private readonly IValidator<RegisterDto> _validator;
+		private readonly IValidator<RegisterDto> _registerValidator;
+		private readonly IValidator<RegisterByGuestDto> _registerByGuestValidator;
 
-		public AuthController(AuthService authService, IValidator<RegisterDto> validator)
+		public AuthController(AuthService authService, IValidator<RegisterDto> registerValidator, IValidator<RegisterByGuestDto> registerByGuestValidator)
 		{
 			this._authService = authService;
-			this._validator = validator;
+			this._registerValidator = registerValidator;
+			this._registerByGuestValidator = registerByGuestValidator;
 		}
 		[HttpPost("Register")]
 		public async Task<IActionResult> RegisterAsync(RegisterDto model)
 		{
 			try
 			{
-				var result = await _validator.ValidateAsync(model);
+				var result = await _registerValidator.ValidateAsync(model);
 				if (!result.IsValid)
 				{
 					string errors = JsonSerializer.Serialize(result.Errors);
 					throw new InvalidDataException(errors);
 				}
 				RegisterResponse res = await _authService.RegisterAsync(model);
+				return Ok(res);
+			}
+			catch
+			{
+				throw;
+			}
+		}
+
+		[HttpPost("RegisterByGuest")]
+		public async Task<IActionResult> RegisterByGuestAsync(RegisterByGuestDto model)
+		{
+			try
+			{
+				var result = await _registerByGuestValidator.ValidateAsync(model);
+				if (!result.IsValid)
+				{
+					string errors = JsonSerializer.Serialize(result.Errors);
+					throw new InvalidDataException(errors);
+				}
+				RegisterResponse res = await _authService.RegisterByGuestAsync(model);
 				return Ok(res);
 			}
 			catch
