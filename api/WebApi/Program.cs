@@ -43,6 +43,7 @@ builder.Services.AddScoped<ProfileService>();
 
 //Add Validator
 builder.Services.AddScoped<IValidator<RegisterDto>, RegisterDtoValidator>();
+builder.Services.AddScoped<IValidator<RegisterByGuestDto>, RegisterByGuestDtoValidator>();
 
 //Resolve ef cycles error 
 builder.Services.AddControllers().AddJsonOptions(opt => opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);

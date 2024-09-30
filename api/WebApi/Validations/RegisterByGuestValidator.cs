@@ -1,14 +1,12 @@
-﻿using WebApi.DTOs;
-using FluentValidation;
-using WebApi.Utils;
-using Domain.Entities;
+﻿using FluentValidation;
 using Infrastructure.Context;
+using WebApi.DTOs;
 
 namespace WebApi.Validations
 {
-	public class RegisterDtoValidator : AbstractValidator<RegisterDto>
+	public class RegisterByGuestDtoValidator : AbstractValidator<RegisterByGuestDto>
 	{
-		public RegisterDtoValidator(AppDbContext context)
+		public RegisterByGuestDtoValidator(AppDbContext context)
 		{
 			RuleFor(p => p.UserId)
 				.NotNull()
@@ -33,16 +31,6 @@ namespace WebApi.Validations
 			RuleFor(p => p.DateOfBirth)
 				.ExclusiveBetween(new DateTime(1970, 1, 1), DateTime.Now)
 				.WithMessage("Date of birth is invalid");
-
-			RuleFor(p => p.ContactMobile)
-				.Length(10, 30)
-				.WithMessage("Mobile is invalid");
-
-			RuleFor(p => p.ContactEmail)
-				.EmailAddress()
-				.WithMessage("Email is invalid")
-				.MaximumLength(30)
-				.WithMessage("Email is too long");
 
 			RuleFor(p => p.UserLv)
 				.NotNull()
